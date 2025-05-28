@@ -1,0 +1,717 @@
+{% extends "base.html" %}
+{% load static %} {# To use static files like images, CSS, JS #}
+
+{% block content %}
+<style>
+    /* Google Fonts - Make sure these are linked in your base.html <head> */
+/* example: <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"> */
+
+/* Basic Resets & Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Lora', serif; /* Body text font */
+    line-height: 1.7; /* Increased line height for better readability */
+    color: #333;
+    background-color: #f8f8f8; /* Slightly lighter background */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 25px; /* Slightly more padding */
+}
+
+a {
+    text-decoration: none;
+    color: #4A90E2; /* A more subtle blue for links */
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+a:hover {
+    color: #2F6DBA; /* Darker blue on hover */
+    text-decoration: underline; /* Underline on hover for clarity */
+}
+
+/* Headings Base Style */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Merriweather', serif; /* Headings font */
+    color: #2C3E50;
+    margin-bottom: 1rem;
+}
+
+/* --- Base HTML Styles (Header, Footer) --- */
+
+/* Header Styles */
+.main-header {
+    background-color: #FFFFFF;
+    padding: 20px 0; /* Increased padding */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* More pronounced shadow */
+    position: sticky; /* Sticky header */
+    top: 0;
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Merriweather', serif;
+    font-size: 2rem; /* Larger logo font */
+    font-weight: 700;
+    color: #2C3E50;
+    text-transform: uppercase; /* Uppercase for logo */
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 40px; /* More spacing between links */
+}
+
+.nav-links a {
+    color: #555;
+    font-weight: 500;
+    font-size: 1.05rem; /* Slightly smaller font for nav links */
+    padding: 8px 0; /* More padding */
+    position: relative;
+    text-transform: uppercase; /* Uppercase nav links */
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: #4A90E2; /* Link hover underline color */
+    bottom: -5px; /* Position below text */
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Menu Toggle (for mobile) */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    outline: none; /* Remove outline on click */
+}
+
+.menu-toggle span {
+    display: block;
+    width: 28px; /* Slightly larger lines */
+    height: 3px;
+    background-color: #333;
+    margin: 6px 0; /* More spacing between lines */
+    transition: all 0.3s ease;
+}
+
+/* Main Content */
+.main-content {
+    padding: 60px 0; /* Increased padding for main content */
+    min-height: calc(100vh - 180px); /* Adjust based on header/footer height */
+}
+
+/* Footer Styles */
+.main-footer {
+    background-color: #2C3E50; /* Darker, more sophisticated footer background */
+    color: #E0E0E0; /* Lighter text for contrast */
+    text-align: center;
+    padding: 30px 0; /* More padding */
+    font-size: 0.9rem;
+    border-top: 1px solid #3F5765; /* Subtle top border */
+}
+
+.main-footer .social-links {
+    margin-top: 15px;
+}
+
+.main-footer .social-links a {
+    display: inline-block;
+    margin: 0 12px; /* More spacing for icons */
+    transition: transform 0.2s ease;
+}
+
+.main-footer .social-links a:hover {
+    transform: translateY(-3px); /* Subtle hover effect */
+}
+
+.main-footer .social-links img {
+    width: 28px; /* Larger icons */
+    height: 28px;
+    filter: invert(0.9); /* Makes icons light grey on dark background */
+}
+
+/* --- Homepage Specific Styles --- */
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 600px; /* Adjust height as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    background-image: url("https://i.pinimg.com/736x/2d/09/7c/2d097c9829d8aa6ed5cbaea0ec753609.jpg"); /* Add a compelling image here */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden; /* Ensures image doesn't overflow */
+}
+
+.hero-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.hero-title {
+    font-family: 'Merriweather', serif; /* Consistent with new heading font */
+    font-size: 3.8rem; /* Slightly larger for impact */
+    margin-bottom: 25px;
+    line-height: 1.2;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.8); /* Stronger shadow */
+}
+
+.hero-subtitle {
+    font-size: 1.6rem; /* Slightly larger */
+    margin-bottom: 45px;
+    font-weight: 400; /* Use Lora's regular weight */
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+}
+
+.hero-actions .btn {
+    margin: 0 18px; /* More spacing */
+    padding: 16px 35px; /* More padding */
+    font-size: 1.2rem; /* Larger text */
+    border-radius: 8px; /* Slightly more rounded */
+    transition: all 0.3s ease;
+    font-weight: 600; /* Make buttons bolder */
+    letter-spacing: 0.5px;
+}
+
+/* Button styles - updated colors for a more premium feel */
+.btn-primary {
+    background-color: #4A90E2; /* Primary blue */
+    color: #fff;
+    border: 1px solid #4A90E2;
+}
+
+.btn-primary:hover {
+    background-color: #2F6DBA;
+    border-color: #2F6DBA;
+    transform: translateY(-2px); /* Subtle lift */
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.25); /* More transparent */
+    color: #fff;
+    transform: translateY(-2px); /* Subtle lift */
+}
+
+/* Section Titles & Descriptions (reusable) */
+.section-title {
+    font-family: 'Merriweather', serif; /* Consistent with new heading font */
+    font-size: 2.8rem; /* Slightly larger */
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2C3E50;
+    font-weight: 700;
+}
+
+.section-description {
+    text-align: center;
+    font-size: 1.15rem; /* Slightly larger */
+    margin-bottom: 50px; /* More space */
+    max-width: 900px; /* Wider text block */
+    margin-left: auto;
+    margin-right: auto;
+    color: #555;
+    line-height: 1.8;
+}
+
+/* About Section */
+.about-section {
+    padding: 100px 0; /* More vertical padding */
+    background-color: #fff;
+}
+
+.about-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px; /* More spacing */
+    margin-top: 60px;
+    text-align: center;
+}
+
+.feature-item {
+    padding: 30px; /* More padding */
+    background-color: #fcfcfc; /* Very light background */
+    border-radius: 10px; /* More rounded corners */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.07); /* Softer, larger shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee; /* Subtle border */
+}
+
+.feature-item:hover {
+    transform: translateY(-8px); /* More pronounced lift */
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15); /* More pronounced shadow */
+}
+
+.feature-icon {
+    width: 70px; /* Larger icons */
+    height: 70px;
+    margin-bottom: 25px;
+}
+
+.feature-item h3 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.8rem; /* Larger font */
+    margin-bottom: 18px;
+    color: #34495e;
+}
+
+.feature-item p {
+    font-size: 1.05rem; /* Slightly larger */
+    color: #666;
+    line-height: 1.7;
+}
+
+/* Featured Places Section */
+.featured-places-section {
+    padding: 100px 0; /* More vertical padding */
+    background-color: #f4f6f9; /* Slightly darker background to differentiate */
+}
+
+.places-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly wider cards */
+    gap: 35px; /* More spacing */
+    margin-top: 60px;
+}
+
+.place-card {
+    background-color: #fff;
+    border-radius: 10px; /* More rounded corners */
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1); /* Softer shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee; /* Subtle border */
+}
+
+.place-card:hover {
+    transform: translateY(-8px); /* More pronounced lift */
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2); /* More pronounced shadow */
+}
+
+.place-image {
+    width: 100%;
+    height: 250px; /* Taller images */
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.95); /* Slightly less bright image for softer look */
+    transition: filter 0.3s ease;
+}
+
+.place-card:hover .place-image {
+    filter: brightness(1); /* Full brightness on hover */
+}
+
+.place-info {
+    padding: 25px; /* More padding */
+}
+
+.place-info h3 {
+    font-family: 'Merriweather', serif;
+    font-size: 2rem; /* Larger font */
+    margin-bottom: 12px;
+}
+
+.place-info h3 a {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.place-info h3 a:hover {
+    color: #4A90E2; /* Use primary blue on hover */
+}
+
+.place-location {
+    font-size: 1rem; /* Slightly larger */
+    color: #888;
+    margin-bottom: 18px;
+    font-style: italic; /* Italic location */
+}
+
+.place-short-description {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 25px; /* More spacing */
+    line-height: 1.6;
+}
+
+.btn-small {
+    padding: 10px 20px; /* More padding */
+    font-size: 1rem; /* Larger font */
+    background-color: #4A90E2;
+    color: #fff;
+    border-radius: 6px; /* Slightly more rounded */
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: 500;
+}
+
+.btn-small:hover {
+    background-color: #2F6DBA;
+    transform: translateY(-2px);
+}
+
+.view-all-button {
+    text-align: center;
+    margin-top: 70px; /* More space */
+}
+
+/* CTA Section */
+.cta-section {
+    background-color: #2C3E50; /* Dark background for contrast */
+    color: #fff;
+    padding: 100px 20px; /* More padding */
+    text-align: center;
+}
+
+.cta-title {
+    color: #fff;
+    font-size: 3.5rem; /* Larger */
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.cta-description {
+    font-size: 1.3rem; /* Larger */
+    margin-bottom: 50px;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+}
+
+.btn-cta {
+    background-color: #28a745; /* Vibrant green for primary action */
+    border-color: #28a745;
+    color: #fff;
+    font-weight: bold;
+    padding: 20px 45px; /* Larger button */
+    font-size: 1.6rem; /* Larger text */
+    border-radius: 10px; /* More rounded */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Initial shadow */
+}
+
+.btn-cta:hover {
+    background-color: #218838;
+    transform: translateY(-4px); /* More pronounced lift */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4); /* Stronger shadow on hover */
+}
+
+.cta-login-prompt {
+    margin-top: 30px; /* More space */
+    font-size: 1.1rem;
+    opacity: 0.95;
+}
+
+.cta-login-prompt a {
+    color: #90CAF9; /* Lighter blue for link on dark background */
+    font-weight: bold;
+}
+
+.cta-login-prompt a:hover {
+    text-decoration: underline;
+}
+
+/* Testimonials Section */
+.testimonials-section {
+    padding: 100px 0; /* More vertical padding */
+    background-color: #fff;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 35px; /* More spacing */
+    margin-top: 60px;
+}
+
+.testimonial-card {
+    background-color: #fcfcfc;
+    border-left: 6px solid #4A90E2; /* Thicker, primary blue border */
+    padding: 35px; /* More padding */
+    border-radius: 10px; /* More rounded */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Softer shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.testimonial-card p {
+    font-style: italic;
+    font-size: 1.15rem; /* Slightly larger */
+    color: #444;
+    margin-bottom: 25px;
+    line-height: 1.7;
+}
+
+.testimonial-author {
+    font-weight: bold;
+    color: #333;
+    text-align: right;
+    font-size: 1rem; /* Slightly larger */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 3.2rem;
+    }
+    .hero-subtitle {
+        font-size: 1.4rem;
+    }
+    .section-title {
+        font-size: 2.5rem;
+    }
+    .cta-title {
+        font-size: 3rem;
+    }
+    .hero-actions .btn {
+        padding: 14px 30px;
+        font-size: 1.1rem;
+    }
+    .place-image {
+        height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.8rem;
+    }
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    .hero-actions .btn {
+        margin: 15px auto;
+        display: block;
+        width: 90%;
+    }
+    .section-title {
+        font-size: 2.2rem;
+    }
+    .about-features, .places-grid, .testimonials-grid {
+        grid-template-columns: 1fr; /* Stack columns on small screens */
+    }
+    .feature-item, .place-card, .testimonial-card {
+        margin: 0 10px; /* Add some horizontal margin */
+    }
+    .cta-title {
+        font-size: 2.5rem;
+    }
+    .btn-cta {
+        width: 95%;
+        font-size: 1.3rem;
+    }
+    .main-content {
+        padding: 40px 0;
+    }
+    .hero-section {
+        height: 500px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    .section-title {
+        font-size: 1.9rem;
+    }
+    .place-info h3 {
+        font-size: 1.7rem;
+    }
+    .place-image {
+        height: 180px;
+    }
+    .hero-actions .btn {
+        font-size: 1rem;
+        padding: 12px 25px;
+    }
+    .cta-title {
+        font-size: 2rem;
+    }
+    .btn-cta {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+    }
+    .container {
+        padding: 0 15px;
+    }
+}
+</style>
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title" style="color: white;">Uncover the World's Rich Heritage</h1>
+            <p class="hero-subtitle" style="color: rgb(171, 167, 167);">Journey through ancient wonders, vibrant traditions, and captivating stories.</p>
+                                {% if user.is_authenticated %}
+
+            <div class="hero-actions">
+                <a href="/places/" class="btn btn-primary">Explore Destinations</a>
+                <a href="/packages/" class="btn btn-secondary">View Packages</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="hero-image-overlay"></div>
+    </section>
+
+    <section class="about-section container">
+        <h2 class="section-title">About Our Platform</h2>
+        <p class="section-description">We are dedicated to connecting travelers with authentic cultural and historical experiences around the globe. Our platform offers curated destinations, specialized tour packages, and expert local guides to ensure an unforgettable journey into the heart of human heritage.</p>
+        <div class="about-features">
+            <div class="feature-item">
+                <img src="https://i.pinimg.com/736x/38/a9/c0/38a9c0231bb0a6c8f940effeb9c43d78.jpg" alt="Diverse Destinations Icon" class="feature-icon">
+                <h3>Diverse Destinations</h3>
+                <p>From ancient ruins to bustling cultural centers, explore a wide array of heritage sites.</p>
+            </div>
+            <div class="feature-item">
+                <img src="https://i.pinimg.com/736x/8e/57/da/8e57dac012090d2f56fab8e07e6d0d1a.jpg" alt="Tailored Packages Icon" class="feature-icon">
+                <h3>Tailored Packages</h3>
+                <p>Find tours designed for history buffs, art lovers, adventure seekers, and more.</p>
+            </div>
+            <div class="feature-item">
+                <img src="https://i.pinimg.com/736x/d2/cd/48/d2cd489ec47e30e34610b9f7624de76c.jpg" alt="Expert Guides Icon" class="feature-icon">
+                <h3>Expert Local Guides</h3>
+                <p>Gain insights from knowledgeable local guides who bring history to life.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-places-section">
+        <div class="container">
+            <h2 class="section-title">Featured Heritage Destinations</h2>
+            <p class="section-description">Discover some of our most popular and historically significant locations.</p>
+            <div class="places-grid">
+                {# Loop through some featured places if passed from Django view #}
+                {% for place in featured_places %}
+                <div class="place-card">
+                    <img src="{{ place.image.url }}" alt="{{ place.name }}" class="place-image">
+                    <div class="place-info">
+                        <h3><a href="{{ place.get_absolute_url }}">{{ place.name }}</a></h3>
+                        <p class="place-location">{{ place.location }}</p>
+                        <p class="place-short-description">{{ place.short_description|truncatechars:100 }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                
+                <div class="place-card">
+                    <img src="https://i.pinimg.com/736x/ac/9e/1b/ac9e1bd0ec32b245d1229563cd74129e.jpg" alt="Rome, Italy" class="place-image">
+                    <div class="place-info">
+                        <h3><a href="/places/rome/">Ancient Rome</a></h3>
+                        <p class="place-location">Rome, Italy</p>
+                        <p class="place-short-description">Explore the Colosseum, Roman Forum, and Vatican City's timeless treasures.</p>
+                    </div>
+                </div>
+                <div class="place-card">
+                    <img src="https://i.pinimg.com/736x/94/9a/8e/949a8eeddcd7c356141305a2c860f7bc.jpg" alt="Kyoto, Japan" class="place-image">
+                    <div class="place-info">
+                        <h3><a href="/places/kyoto/">Traditional Kyoto</a></h3>
+                        <p class="place-location">Kyoto, Japan</p>
+                        <p class="place-short-description">Immerse yourself in temples, geisha districts, and serene Zen gardens.</p>
+                    </div>
+                </div>
+                <div class="place-card">
+                    <img src="https://i.pinimg.com/736x/7e/a4/ce/7ea4ce373e3d1199c6de960091670641.jpg" alt="Machu Picchu, Peru" class="place-image">
+                    <div class="place-info">
+                        <h3><a href="/places/machu-picchu/">Mystical Machu Picchu</a></h3>
+                        <p class="place-location">Cusco Region, Peru</p>
+                        <p class="place-short-description">Hike to the breathtaking Incan citadel nestled high in the Andes mountains.</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+                                {% if user.is_authenticated %}
+
+            <div class="view-all-button">
+                <a href="/places/" class="btn btn-primary">View All Destinations</a>
+            </div>
+                        {% endif %}
+
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="section-title cta-title">Ready to Begin Your Journey?</h2>
+            <p class="cta-description">Sign up today to save your favorite places, track your bookings, and get personalized recommendations!</p>
+            <a href="/accounts/register/" class="btn btn-large btn-cta">Register Now</a>
+            <p class="cta-login-prompt">Already have an account? <a href="/accounts/login/">Login here</a></p>
+        </div>
+    </section>
+
+    <section class="testimonials-section container">
+        <h2 class="section-title">What Our Travelers Say</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"An incredible platform! I discovered hidden gems and had the most enriching travel experience thanks to their expert guides."</p>
+                <div class="testimonial-author">- Sarah L., USA</div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The tailored packages made planning so easy. Every detail was perfect, and the cultural insights were invaluable."</p>
+                <div class="testimonial-author">- Omar K., Egypt</div>
+            </div>
+            <div class="testimonial-card">
+                <p>"I've always wanted to visit ancient sites, and this platform made it a dream come true. Highly recommended!"</p>
+                <div class="testimonial-author">- Li Wei, China</div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

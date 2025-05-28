@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %} {# Make sure this is present to use static files like images #}
+
+{% block content %}
+<style>
+    /* --- Guides List Page Specific Styles --- */
+
+/* Reusing .page-hero-section from other list pages for consistency */
+.page-hero-section {
+    position: relative;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    background-image: url("{% static 'images/guides-hero-background.jpg' %}"); /* Specific image for guides */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    margin-bottom: 60px;
+}
+
+/* Reusing page-hero-image-overlay, page-hero-content, page-hero-title, page-hero-subtitle styles */
+/* from your general CSS or place_list.css, as they are consistent */
+
+/* Section Header (for All Guides title and Add button) */
+.guides-list-section .section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.guides-list-section .section-title {
+    margin-bottom: 15px;
+    font-size: 2.5rem;
+}
+
+.guides-list-section .section-description {
+    margin-bottom: 30px;
+    font-size: 1.05rem;
+}
+
+.add-guide-button {
+    margin-top: 30px;
+}
+
+/* Guides Grid (similar to places-grid and packages-grid) */
+.guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly smaller min-width for guide profiles if needed */
+    gap: 35px;
+    margin-top: 0;
+}
+
+.guide-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    text-align: center; /* Center content within card */
+}
+
+.guide-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+.guide-profile-picture {
+    width: 150px; /* Fixed size for profile picture */
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%; /* Make it round */
+    margin: 25px auto 15px auto; /* Center and add spacing */
+    border: 4px solid #4A90E2; /* Blue border around picture */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+.guide-card:hover .guide-profile-picture {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.guide-info {
+    padding: 0 25px 25px 25px; /* Adjust padding for top */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center text content */
+}
+
+.guide-info h3 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.guide-info h3 a {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.guide-info h3 a:hover {
+    color: #4A90E2;
+}
+
+.guide-specialization {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.guide-specialization i { /* Styling for font-awesome icon */
+    margin-right: 5px;
+    color: #4A90E2;
+}
+
+.guide-short-bio {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    flex-grow: 1;
+}
+
+/* Reusing .btn .btn-small styles from previous sections */
+
+/* No Guides Found Message */
+.no-guides-found {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin-top: 40px;
+}
+
+.no-guides-found p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.no-guides-found a {
+    font-weight: bold;
+}
+
+/* Responsive adjustments for guides list */
+@media (max-width: 1024px) {
+    .page-hero-title {
+        font-size: 2.5rem;
+    }
+    .page-hero-subtitle {
+        font-size: 1.1rem;
+    }
+    .guides-list-section .section-title {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-hero-section {
+        height: 280px;
+    }
+    .page-hero-title {
+        font-size: 2rem;
+    }
+    .page-hero-subtitle {
+        font-size: 1rem;
+    }
+    .guides-grid {
+        grid-template-columns: 1fr; /* Stack cards on small screens */
+    }
+    .guide-card {
+        margin: 0 10px;
+    }
+    .guides-list-section .section-title {
+        font-size: 2rem;
+    }
+    .guides-list-section .section-description {
+        font-size: 0.95rem;
+    }
+    .guide-profile-picture {
+        width: 120px;
+        height: 120px;
+        margin-top: 20px;
+    }
+    .guide-info h3 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-hero-section {
+        height: 220px;
+    }
+    .page-hero-title {
+        font-size: 1.8rem;
+    }
+    .guide-info {
+        padding: 0 15px 20px 15px;
+    }
+}
+</style>
+   
+
+    <section class="guides-list-section container">
+        <div class="section-header">
+            <h2 class="section-title">All Available Guides</h2>
+            <p class="section-description">Browse through our dedicated team of guides, each specializing in unique aspects of heritage.</p>
+            <div class="add-guide-button">
+                <a href="{% url 'guide_create' %}" class="btn btn-primary">Add New Guide</a>
+            </div>
+        </div>
+
+        {% if guides %}
+            <div class="guides-grid">
+                {% for guide in guides %}
+                    <div class="guide-card">
+                        {# Assuming 'guide.profile_picture' is a Django ImageField or similar and has a .url attribute #}
+                        {# Use a placeholder image if the guide doesn't have one #}
+                        <img src="http://127.0.0.1:8000/media/guides/WhatsApp_Image_2025-05-22_at_11.57.56_99e04b32.jpg" alt="{{ guide.name }}" class="guide-profile-picture">
+                        <div class="guide-info">
+                            <h3><a href="{% url 'guide_detail' guide.pk %}">{{ guide.name }}</a></h3>
+                            {# Assuming 'guide.specialization' or 'languages' field #}
+                            {% if guide.specialization %}
+                                <p class="guide-specialization"><i class="fas fa-hat-cowboy"></i> {{ guide.specialization }}</p>
+                            {% elif guide.languages %}
+                                <p class="guide-specialization"><i class="fas fa-language"></i> {{ guide.languages }}</p>
+                            {% else %}
+                                <p class="guide-specialization">Heritage Tour Expert</p>
+                            {% endif %}
+                            {# Assuming 'guide.short_bio' exists #}
+                            {% if guide.short_bio %}
+                                <p class="guide-short-bio">{{ guide.short_bio|truncatechars:100 }}</p>
+                            {% else %}
+                                <p class="guide-short-bio">Passionate about history and culture, ready to make your tour unforgettable.</p>
+                            {% endif %}
+                            <a href="{% url 'guide_detail' guide.pk %}" class="btn btn-small">View Profile</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-guides-found">
+                <p>No guides have been added yet. Be the first to <a href="{% url 'guide_create' %}" class="btn btn-primary">add a new guide</a>!</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

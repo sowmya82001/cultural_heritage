@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+{% load static %} {# Make sure this is present to use static files #}
+
+{% block content %}
+<style>
+    /* --- Guide Detail Page Specific Styles --- */
+
+/* Reusing .detail-hero-section, but adding guide-hero-section for specific bg-image */
+.guide-hero-section {
+    height: 450px;
+    margin-bottom: 60px;
+    background-image: url("{% static 'images/default-guide-detail-hero.jpg' %}"); /* Fallback/Default image for guide details */
+    background-color: #333;
+}
+
+/* Reusing page-hero-content, page-hero-title, page-hero-subtitle styles */
+/* from your general CSS or place_detail.css, as they are consistent */
+
+.guide-detail-section {
+    padding-bottom: 80px;
+    background-color: #fff;
+}
+
+/* Reusing .detail-content, .description-block, .image-block */
+.detail-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+}
+
+.description-block {
+    flex: 2;
+    min-width: 350px;
+}
+
+.image-block.guide-image-block { /* Specific styles for guide image block */
+    flex: 1;
+    min-width: 280px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.guide-detail-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.image-block.guide-image-block:hover .guide-detail-image {
+    transform: scale(1.02);
+}
+
+.image-caption {
+    font-size: 0.9rem;
+    color: #777;
+    padding: 10px 15px;
+    text-align: center;
+    background-color: #f0f0f0;
+    border-top: 1px solid #eee;
+}
+
+/* Reusing .section-title-left from place_detail */
+.section-title-left {
+    font-family: 'Merriweather', serif;
+    font-size: 2.2rem;
+    text-align: left;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title-left::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #4A90E2;
+    margin-top: 8px;
+}
+
+.guide-full-biography {
+    font-size: 1.1rem;
+    color: #444;
+    line-height: 1.8;
+    margin-top: 20px;
+}
+
+.no-description {
+    font-style: italic;
+    color: #777;
+    margin-top: 20px;
+}
+
+/* Reusing .detail-subheading from package_detail for consistency */
+.detail-subheading {
+    font-family: 'Merriweather', serif;
+    font-size: 1.5rem;
+    color: #34495e;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.detail-subheading i { /* Styling for Font Awesome icons in subheadings */
+    margin-right: 10px;
+    color: #4A90E2; /* Primary blue for icons */
+}
+
+.guide-languages,
+.guide-experience {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.guided-places-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 25px;
+}
+
+.guided-places-list li {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.guided-places-list li a {
+    color: #4A90E2; /* Link color */
+    text-decoration: none;
+}
+
+.guided-places-list li a:hover {
+    text-decoration: underline;
+}
+
+
+/* Action Buttons for Detail Page (reused) */
+.detail-actions {
+    margin-top: 40px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.detail-actions .btn {
+    padding: 12px 25px;
+    font-size: 1.05rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-edit-guide { /* Specific names for clarity, but same styles as btn-edit-place/package */
+    background-color: #4A90E2;
+    border-color: #4A90E2;
+    color: #fff;
+}
+.btn-edit-guide:hover {
+    background-color: #2F6DBA;
+    border-color: #2F6DBA;
+    transform: translateY(-2px);
+}
+
+.btn-delete-guide { /* Specific names for clarity, but same styles as btn-delete-place/package */
+    background-color: #DC3545;
+    border-color: #DC3545;
+    color: #fff;
+}
+.btn-delete-guide:hover {
+    background-color: #C82333;
+    border-color: #C82333;
+    transform: translateY(-2px);
+}
+
+.btn-back-to-list {
+    background-color: #6C757D;
+    border-color: #6C757D;
+    color: #fff;
+}
+.btn-back-to-list:hover {
+    background-color: #5A6268;
+    border-color: #5A6268;
+    transform: translateY(-2px);
+}
+
+
+/* Responsive adjustments for Guide Detail Page */
+@media (max-width: 1024px) {
+    .detail-hero-section {
+        height: 400px;
+    }
+    .detail-hero-section .page-hero-title {
+        font-size: 3rem;
+    }
+    .detail-hero-section .page-hero-subtitle {
+        font-size: 1.3rem;
+    }
+    .section-title-left {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .detail-hero-section {
+        height: 300px;
+        margin-bottom: 40px;
+    }
+    .detail-hero-section .page-hero-title {
+        font-size: 2.5rem;
+    }
+    .detail-hero-section .page-hero-subtitle {
+        font-size: 1.1rem;
+    }
+    .detail-content {
+        flex-direction: column; /* Stack image and description vertically */
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    .description-block, .image-block.guide-image-block {
+        width: 100%;
+        min-width: unset;
+    }
+    .section-title-left {
+        font-size: 1.8rem;
+        text-align: center;
+        width: 100%;
+    }
+    .section-title-left::after {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .guide-full-biography {
+        font-size: 1rem;
+    }
+    .detail-subheading {
+        font-size: 1.3rem;
+    }
+    .detail-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .detail-actions .btn {
+        width: 90%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .detail-hero-section {
+        height: 250px;
+    }
+    .detail-hero-section .page-hero-title {
+        font-size: 2rem;
+    }
+    .detail-hero-section .page-hero-subtitle {
+        font-size: 0.95rem;
+    }
+    .section-title-left {
+        font-size: 1.6rem;
+    }
+    .guide-full-biography, .guide-languages, .guide-experience, .guided-places-list li {
+        font-size: 0.95rem;
+    }
+}
+</style>
+    
+
+    <section class="guide-detail-section container"><br>
+        <div class="detail-content">
+            <div class="description-block">
+                <h2 class="section-title-left">About {{ guide.name }}</h2>
+                {% if guide.biography %}
+                    <div class="guide-full-biography">
+                        {{ guide.biography|safe }} {# Use 'safe' if your biography might contain HTML #}
+                    </div>
+                {% else %}
+                    <p class="no-description">No detailed biography is available for this guide yet.</p>
+                {% endif %}
+
+                {% if guide.languages %} {# Languages are important for guides #}
+                    <h3 class="detail-subheading"><i class="fas fa-language"></i> Languages Spoken</h3>
+                    <p class="guide-languages">{{ guide.languages }}</p>
+                {% endif %}
+
+                {% if guide.experience_years %} {# Assuming 'experience_years' field #}
+                    <h3 class="detail-subheading"><i class="fas fa-history"></i> Experience</h3>
+                    <p class="guide-experience">{{ guide.experience_years }} Years of Guiding Experience</p>
+                {% endif %}
+
+                {% if guide.places_guided and guide.places_guided.all %} {# Assuming 'places_guided' is a ManyToMany or ForeignKey #}
+                    <h3 class="detail-subheading"><i class="fas fa-map-marked-alt"></i> Places Guided</h3>
+                    <ul class="guided-places-list">
+                        {% for place in guide.places_guided.all %}
+                            <li><a href="{% url 'place_detail' place.pk %}">{{ place.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+            </div>
+
+            {% if guide.image %}
+                <div class="image-block guide-image-block">
+                    <img src="{{ guide.image.url }}" alt="{{ guide.name }}" class="guide-detail-image">
+                    {% if guide.image_caption %} {# Assuming you might have an image_caption field #}
+                        <p class="image-caption">{{ guide.image_caption }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="detail-actions">
+            <a href="{% url 'guide_update' guide.pk %}" class="btn btn-primary btn-edit-guide">Edit Guide Profile</a>
+            <a href="{% url 'guide_delete' guide.pk %}" class="btn btn-danger btn-delete-guide">Delete Guide Profile</a>
+            <a href="{% url 'guide_list' %}" class="btn btn-secondary btn-back-to-list">Back to All Guides</a>
+        </div>
+    </section>
+{% endblock %}

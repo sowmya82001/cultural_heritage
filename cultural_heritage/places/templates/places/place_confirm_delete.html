@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* --- Delete Confirmation Page Specific Styles --- */
+
+/* Hero Section for Delete Page */
+.delete-hero-section {
+    background-image: url("{% static 'images/delete-hero-background.jpg' %}"); /* A distinct image for delete pages */
+    height: 280px; /* Shorter hero for a focused message */
+    margin-bottom: 50px;
+}
+
+.delete-hero-section .page-hero-content {
+    background-color: rgba(0, 0, 0, 0.5); /* Slightly darker overlay */
+    padding: 20px 30px;
+    border-radius: 8px;
+}
+
+.delete-hero-section .page-hero-title {
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+}
+
+.delete-hero-section .page-hero-subtitle {
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+/* Confirmation Section */
+.confirmation-section {
+    padding-bottom: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 40vh; /* Ensure it takes up enough vertical space */
+    background-color: #f8f8f8;
+}
+
+.confirmation-box {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    padding: 40px;
+    max-width: 600px; /* Max width for the box */
+    text-align: center;
+    border: 1px solid #eee;
+    animation: fadeIn 0.5s ease-out; /* Simple fade-in animation */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.confirmation-icon {
+    margin-bottom: 25px;
+}
+
+.confirmation-icon img {
+    width: 80px; /* Size of warning icon */
+    height: 80px;
+}
+
+.confirmation-title {
+    font-family: 'Merriweather', serif;
+    font-size: 2.2rem;
+    color: #DC3545; /* Red for warning */
+    margin-bottom: 15px;
+}
+
+.confirmation-message {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.confirmation-message strong {
+    color: #333; /* Make the place name stand out */
+}
+
+.confirmation-form {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap */
+}
+
+.confirmation-form .btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-confirm-delete {
+    background-color: #DC3545; /* Strong red for delete action */
+    border-color: #DC3545;
+    color: #fff;
+}
+.btn-confirm-delete:hover {
+    background-color: #C82333;
+    border-color: #C82333;
+    transform: translateY(-2px);
+}
+
+.btn-cancel-delete {
+    background-color: #6C757D; /* Grey for cancel */
+    border-color: #6C757D;
+    color: #fff;
+}
+.btn-cancel-delete:hover {
+    background-color: #5A6268;
+    border-color: #5A6268;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments for Delete Confirmation */
+@media (max-width: 768px) {
+    .delete-hero-section {
+        height: 220px;
+        margin-bottom: 30px;
+    }
+    .delete-hero-section .page-hero-title {
+        font-size: 2.2rem;
+    }
+    .delete-hero-section .page-hero-subtitle {
+        font-size: 1rem;
+    }
+    .confirmation-box {
+        padding: 30px 25px;
+        margin: 0 15px;
+    }
+    .confirmation-icon img {
+        width: 60px;
+        height: 60px;
+    }
+    .confirmation-title {
+        font-size: 1.8rem;
+    }
+    .confirmation-message {
+        font-size: 1rem;
+    }
+    .confirmation-form {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px;
+    }
+    .confirmation-form .btn {
+        width: 100%; /* Full width buttons */
+        max-width: 300px; /* Limit max width */
+        margin: 0 auto; /* Center buttons */
+    }
+}
+
+@media (max-width: 480px) {
+    .delete-hero-section {
+        height: 180px;
+    }
+    .delete-hero-section .page-hero-title {
+        font-size: 1.8rem;
+    }
+    .confirmation-box {
+        padding: 25px 15px;
+    }
+    .confirmation-title {
+        font-size: 1.6rem;
+    }
+    .confirmation-message {
+        font-size: 0.95rem;
+    }
+    .confirmation-form .btn {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+}
+</style>
+   
+
+    <section class="confirmation-section container">
+        <div class="confirmation-box">
+            
+            <h2 class="confirmation-title">Are you absolutely sure?</h2>
+            <p class="confirmation-message">
+                You are about to permanently delete the place: **"{{ place.name }}"**.
+                This action cannot be undone. All associated data will be lost.
+            </p>
+
+            <form method="post" class="confirmation-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-confirm-delete">Yes, Delete Permanently</button>
+                <a href="{% url 'place_detail' place.pk %}" class="btn btn-secondary btn-cancel-delete">Cancel</a>
+            </form>
+        </div>
+    </section>
+{% endblock %}

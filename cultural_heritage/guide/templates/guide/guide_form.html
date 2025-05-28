@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* --- Form Specific Styles (Create/Edit Place, Package, Guide - Reused) --- */
+
+/* Page Hero for Forms */
+.form-hero-section {
+    background-image: url("{% static 'images/form-hero-background.jpg' %}"); /* Reused background image */
+    height: 300px;
+    margin-bottom: 50px;
+}
+
+/* ... (rest of the .form-hero-section, .form-hero-content, .page-hero-title, .page-hero-subtitle styles) ... */
+
+/* Form Section */
+.form-section {
+    padding: 40px 0 80px 0;
+    background-color: #fcfcfc;
+}
+
+.form-container {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border: 1px solid #eee;
+}
+
+.modern-form .form-group {
+    margin-bottom: 25px;
+}
+
+.modern-form label {
+    display: block;
+    font-family: 'Merriweather', serif;
+    font-size: 1.1rem;
+    color: #34495e;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.modern-form input[type="text"],
+.modern-form input[type="number"],
+.modern-form input[type="email"],
+.modern-form input[type="password"],
+.modern-form textarea,
+.modern-form select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.modern-form input[type="file"] {
+    padding: 8px 0; /* Important for profile picture upload */
+}
+
+.modern-form input[type="text"]:focus,
+.modern-form input[type="number"]:focus,
+.modern-form input[type="email"]:focus,
+.modern-form input[type="password"]:focus,
+.modern-form textarea:focus,
+.modern-form select:focus {
+    border-color: #4A90E2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+    outline: none;
+    background-color: #fff;
+}
+
+.modern-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.modern-form .help-text {
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 5px;
+    display: block;
+}
+
+.modern-form .field-error {
+    color: #DC3545;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.form-errors {
+    background-color: #F8D7DA;
+    color: #721C24;
+    border: 1px solid #F5C6CB;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 25px;
+    font-size: 1rem;
+}
+
+.form-errors p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+
+.form-actions {
+    margin-top: 35px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.form-actions .btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.form-actions .btn-submit {
+    background-color: #28A745;
+    border-color: #28A745;
+    color: #fff;
+}
+
+.form-actions .btn-submit:hover {
+    background-color: #218838;
+    border-color: #218838;
+    transform: translateY(-2px);
+}
+
+.form-actions .btn-cancel {
+    background-color: #6C757D;
+    border-color: #6C757D;
+    color: #fff;
+}
+
+.form-actions .btn-cancel:hover {
+    background-color: #5A6268;
+    border-color: #5A6268;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments for Forms (reused across all forms) */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 30px 20px;
+        margin: 0 15px;
+    }
+    .form-hero-section {
+        height: 250px;
+    }
+    .form-hero-section .page-hero-title {
+        font-size: 2rem;
+    }
+    .form-hero-section .page-hero-subtitle {
+        font-size: 1rem;
+    }
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .form-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 25px 15px;
+    }
+    .form-group label {
+        font-size: 1rem;
+    }
+    .modern-form input, .modern-form textarea, .modern-form select {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+    .form-hero-section {
+        height: 200px;
+    }
+    .form-hero-section .page-hero-title {
+        font-size: 1.8rem;
+    }
+}
+</style>
+    
+
+    <section class="form-section container">
+        <div class="form-container">
+            <form method="post" enctype="multipart/form-data" class="modern-form">
+                {% csrf_token %}
+
+                {# Display non-field errors first if any #}
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="help-text">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-submit">Save Guide</button>
+                    <a href="{% url 'guide_list' %}" class="btn btn-secondary btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

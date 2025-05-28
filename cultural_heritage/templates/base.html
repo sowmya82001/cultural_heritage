@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultural & Heritage Tourism</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<style>
+    /* Google Fonts */
+/* Changed from Playfair Display/Roboto to Merriweather (serif for headings) and Lora (serif for body) */
+/* This provides a more classic, literary, and elegant feel. */
+
+/* Basic Resets & Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Lora', serif; /* Body text font */
+    line-height: 1.7; /* Increased line height for better readability */
+    color: #333;
+    background-color: #f8f8f8; /* Slightly lighter background */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 25px; /* Slightly more padding */
+}
+
+a {
+    text-decoration: none;
+    color: #4A90E2; /* A more subtle blue for links */
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+a:hover {
+    color: #2F6DBA; /* Darker blue on hover */
+    text-decoration: underline; /* Underline on hover for clarity */
+}
+
+/* Headings Base Style */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Merriweather', serif; /* Headings font */
+    color: #2C3E50;
+    margin-bottom: 1rem;
+}
+
+/* Header Styles */
+.main-header {
+    background-color: #FFFFFF;
+    padding: 20px 0; /* Increased padding */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* More pronounced shadow */
+    position: sticky; /* Sticky header */
+    top: 0;
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Merriweather', serif;
+    font-size: 2rem; /* Larger logo font */
+    font-weight: 700;
+    color: #2C3E50;
+    text-transform: uppercase; /* Uppercase for logo */
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 40px; /* More spacing between links */
+}
+
+.nav-links a {
+    color: #555;
+    font-weight: 500;
+    font-size: 1.05rem; /* Slightly smaller font for nav links */
+    padding: 8px 0; /* More padding */
+    position: relative;
+    text-transform: uppercase; /* Uppercase nav links */
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: #4A90E2; /* Link hover underline color */
+    bottom: -5px; /* Position below text */
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Menu Toggle (for mobile) */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    outline: none; /* Remove outline on click */
+}
+
+.menu-toggle span {
+    display: block;
+    width: 28px; /* Slightly larger lines */
+    height: 3px;
+    background-color: #333;
+    margin: 6px 0; /* More spacing between lines */
+    transition: all 0.3s ease;
+}
+
+/* Main Content */
+.main-content {
+    padding: 60px 0; /* Increased padding for main content */
+    min-height: calc(100vh - 180px); /* Adjust based on header/footer height */
+}
+
+/* Footer Styles */
+.main-footer {
+    background-color: #2C3E50; /* Darker, more sophisticated footer background */
+    color: #E0E0E0; /* Lighter text for contrast */
+    text-align: center;
+    padding: 30px 0; /* More padding */
+    font-size: 0.9rem;
+    border-top: 1px solid #3F5765; /* Subtle top border */
+}
+
+.main-footer .social-links {
+    margin-top: 15px;
+}
+
+.main-footer .social-links a {
+    display: inline-block;
+    margin: 0 12px; /* More spacing for icons */
+    transition: transform 0.2s ease;
+}
+
+.main-footer .social-links a:hover {
+    transform: translateY(-3px); /* Subtle hover effect */
+}
+
+.main-footer .social-links img {
+    width: 28px; /* Larger icons */
+    height: 28px;
+    filter: invert(0.9); /* Makes icons light grey on dark background */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #fff;
+        position: absolute;
+        top: 75px; /* Adjust based on new header height */
+        left: 0;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        padding: 10px 0;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .nav-links li:last-child {
+        border-bottom: none; /* No border for the last item */
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 18px 25px; /* More padding for touch targets */
+        color: #333;
+        font-size: 1.1rem;
+    }
+    .nav-links a::after {
+        display: none; /* Hide underline for mobile menu items */
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.6rem;
+    }
+    .main-header {
+        padding: 15px 0;
+    }
+    .main-content {
+        padding: 30px 0;
+    }
+}
+</style>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <nav class="main-nav">
+                <a href="/" class="logo">Heritage Trails</a>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                                        {% if user.is_authenticated %}
+
+                    <li><a href="/places/">Places</a></li>
+                    <li><a href="/packages/">Packages</a></li>
+                    <li><a href="/guide/">Guides</a></li>
+                        <li><a href="/accounts/logout/">Logout</a></li>
+                    {% else %}
+                        <li><a href="/accounts/login/">Login</a></li>
+                        <li><a href="/accounts/register/">Register</a></li>
+                    {% endif %}
+                </ul>
+                <button class="menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 Cultural & Heritage Tourism. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><img src="https://i.pinimg.com/736x/5b/b0/f7/5bb0f73a7b3e0f976acad614a42e5040.jpg" alt="Facebook"></a>
+                <a href="#" aria-label="Twitter"><img src="https://i.pinimg.com/736x/39/8c/25/398c25a4436e5b8ca72f141084cdc66e.jpg" alt="Twitter"></a>
+                <a href="#" aria-label="Instagram"><img src="https://i.pinimg.com/736x/2e/a0/d1/2ea0d1bcb2702c62619f82359e8a4650.jpg" alt="Instagram"></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

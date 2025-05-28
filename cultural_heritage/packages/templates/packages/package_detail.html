@@ -1,0 +1,393 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* --- Package Detail Page Specific Styles --- */
+
+/* Reusing .detail-hero-section from place_detail for consistent header */
+.detail-hero-section {
+    height: 450px;
+    margin-bottom: 60px;
+    background-image: url("{% static 'images/default-package-detail-hero.jpg' %}"); /* Fallback/Default image for package details */
+    background-color: #333;
+}
+
+/* Reusing page-hero-content, page-hero-title, page-hero-subtitle styles */
+/* from your general CSS or place_detail.css, as they are consistent */
+
+
+.package-detail-section {
+    padding-bottom: 80px;
+    background-color: #fff;
+}
+
+.detail-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-bottom: 60px;
+    flex-wrap: wrap; /* Allows stacking on smaller screens */
+}
+
+.description-block {
+    flex: 2; /* Takes up more space */
+    min-width: 350px; /* Minimum width before wrapping */
+}
+
+.summary-sidebar {
+    flex: 1; /* Takes up less space */
+    min-width: 280px; /* Minimum width for the sidebar */
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Space between sidebar boxes */
+}
+
+.price-box, .contact-box {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.price-label {
+    display: block;
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.package-price-large {
+    font-family: 'Merriweather', serif;
+    font-size: 3rem; /* Very large price */
+    font-weight: 700;
+    color: #28a745; /* Prominent green for price */
+    display: block;
+    margin-bottom: 25px;
+}
+
+.btn-book-now {
+    display: block; /* Full width button */
+    width: 100%;
+    padding: 15px 25px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background-color: #FF5722; /* Orange for Call to Action */
+    border-color: #FF5722;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-book-now:hover {
+    background-color: #E64A19;
+    border-color: #E64A19;
+    transform: translateY(-2px);
+}
+
+.price-note {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 15px;
+}
+
+.contact-box .detail-subheading {
+    margin-top: 0; /* Remove top margin from subheading if it's first */
+}
+
+.contact-box p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.btn-contact {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1.05rem;
+    background-color: #4A90E2; /* Blue for contact */
+    border-color: #4A90E2;
+    color: #fff;
+}
+
+.btn-contact:hover {
+    background-color: #2F6DBA;
+    border-color: #2F6DBA;
+    transform: translateY(-2px);
+}
+
+.btn-contact i {
+    margin-right: 8px;
+}
+
+/* Reusing .section-title-left from place_detail */
+.section-title-left {
+    font-family: 'Merriweather', serif;
+    font-size: 2.2rem;
+    text-align: left;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title-left::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #4A90E2;
+    margin-top: 8px;
+}
+
+.package-full-description {
+    font-size: 1.1rem;
+    color: #444;
+    line-height: 1.8;
+    margin-top: 20px;
+}
+
+.no-description {
+    font-style: italic;
+    color: #777;
+    margin-top: 20px;
+}
+
+.detail-subheading {
+    font-family: 'Merriweather', serif;
+    font-size: 1.5rem;
+    color: #34495e;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.detail-list {
+    list-style: none; /* Remove default bullet points */
+    padding: 0;
+    margin-bottom: 25px;
+}
+
+.detail-list li {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.detail-list li i { /* Styling for font-awesome check circle */
+    color: #28a745; /* Green checkmark */
+    margin-right: 10px;
+}
+
+.package-itinerary {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    /* Consider styling for ordered lists or specific headings if itinerary is complex HTML */
+}
+
+/* Action Buttons for Detail Page (reused) */
+.detail-actions {
+    margin-top: 40px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.detail-actions .btn {
+    padding: 12px 25px;
+    font-size: 1.05rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-edit-package {
+    background-color: #4A90E2;
+    border-color: #4A90E2;
+    color: #fff;
+}
+.btn-edit-package:hover {
+    background-color: #2F6DBA;
+    border-color: #2F6DBA;
+    transform: translateY(-2px);
+}
+
+.btn-delete-package {
+    background-color: #DC3545;
+    border-color: #DC3545;
+    color: #fff;
+}
+.btn-delete-package:hover {
+    background-color: #C82333;
+    border-color: #C82333;
+    transform: translateY(-2px);
+}
+
+.btn-back-to-list {
+    background-color: #6C757D;
+    border-color: #6C757D;
+    color: #fff;
+}
+.btn-back-to-list:hover {
+    background-color: #5A6268;
+    border-color: #5A6268;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments for Package Detail Page */
+@media (max-width: 1024px) {
+    .detail-hero-section {
+        height: 400px;
+    }
+    .detail-hero-section .page-hero-title {
+        font-size: 3rem;
+    }
+    .detail-hero-section .page-hero-subtitle {
+        font-size: 1.3rem;
+    }
+    .section-title-left {
+        font-size: 2rem;
+    }
+    .package-price-large {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .detail-hero-section {
+        height: 300px;
+        margin-bottom: 40px;
+    }
+    .detail-hero-section .page-hero-title {
+        font-size: 2.5rem;
+    }
+    .detail-hero-section .page-hero-subtitle {
+        font-size: 1.1rem;
+    }
+    .detail-content {
+        flex-direction: column; /* Stack description and sidebar vertically */
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    .description-block, .summary-sidebar {
+        width: 100%; /* Full width when stacked */
+        min-width: unset;
+    }
+    .section-title-left {
+        font-size: 1.8rem;
+        text-align: center; /* Center title when stacked */
+        width: 100%;
+    }
+    .section-title-left::after {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .package-full-description {
+        font-size: 1rem;
+    }
+    .package-price-large {
+        font-size: 2rem;
+    }
+    .btn-book-now {
+        font-size: 1.1rem;
+        padding: 12px 20px;
+    }
+    .detail-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .detail-actions .btn {
+        width: 90%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .detail-hero-section {
+        height: 250px;
+    }
+    .detail-hero-section .page-hero-title {
+        font-size: 2rem;
+    }
+    .detail-hero-section .page-hero-subtitle {
+        font-size: 0.95rem;
+    }
+    .section-title-left {
+        font-size: 1.6rem;
+    }
+    .package-full-description, .detail-list li, .package-itinerary p {
+        font-size: 0.95rem;
+    }
+    .price-box, .contact-box {
+        padding: 25px 20px;
+    }
+}
+</style>
+    
+
+    <section class="package-detail-section container">
+        <div class="detail-content">
+            <div class="description-block">
+                <h2 class="section-title-left">Package Overview</h2>
+                {% if package.description %}
+                    <div class="package-full-description">
+                        {{ package.description|safe }} {# Use 'safe' if your description might contain HTML #}
+                    </div>
+                {% else %}
+                    <p class="no-description">No detailed description is available for this package yet.</p>
+                {% endif %}
+
+                {# Add more package-specific details here if available, e.g., inclusions, itinerary #}
+                {% if package.inclusions %}
+                    <h3 class="detail-subheading">What's Included:</h3>
+                    <ul class="detail-list">
+                        {% for item in package.inclusions.splitlines %} {# Assuming inclusions is a TextField with line breaks #}
+                            <li><i class="fas fa-check-circle"></i> {{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if package.itinerary %}
+                    <h3 class="detail-subheading">Itinerary:</h3>
+                    <div class="package-itinerary">
+                        {{ package.itinerary|safe }} {# Assuming itinerary might be rich text #}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="summary-sidebar">
+                <div class="price-box">
+                    <span class="price-label">Starting From:</span>
+                    <span class="package-price-large">₹{{ package.price }}</span>
+                    <button class="btn btn-primary btn-book-now">Book This Package</button>
+                    <p class="price-note">Prices may vary based on customization and season.</p>
+                </div>
+
+                {% if package.contact_info %} {# Example of additional info #}
+                    <div class="contact-box">
+                        <h3 class="detail-subheading">Have Questions?</h3>
+                        <p>Contact us for more details about this package.</p>
+                        <a href="mailto:{{ package.contact_info }}" class="btn btn-secondary btn-contact"><i class="fas fa-envelope"></i> Email Us</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="detail-actions">
+            <a href="{% url 'package_update' package.pk %}" class="btn btn-primary btn-edit-package">Edit Package</a>
+            <a href="{% url 'package_delete' package.pk %}" class="btn btn-danger btn-delete-package">Delete Package</a>
+            <a href="{% url 'package_list' %}" class="btn btn-secondary btn-back-to-list">Back to All Packages</a>
+        </div>
+    </section>
+{% endblock %}

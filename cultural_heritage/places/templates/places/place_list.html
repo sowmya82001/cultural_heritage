@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* --- Places List Page Specific Styles (Table Layout) --- */
+
+/* Reusing Page Hero Section from previous code */
+.page-hero-section {
+    position: relative;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    background-image: url("{% static 'images/page-hero-background.jpg' %}"); /* A different, relevant image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    margin-bottom: 60px;
+}
+
+.page-hero-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.page-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    padding: 20px;
+}
+
+.page-hero-title {
+    font-family: 'Merriweather', serif;
+    font-size: 3rem;
+    margin-bottom: 15px;
+    line-height: 1.2;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+
+.page-hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 0;
+    font-weight: 300;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+}
+
+/* Section Header for Table */
+.places-table-section .section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.places-table-section .section-title {
+    margin-bottom: 15px;
+    font-size: 2.5rem;
+}
+
+.places-table-section .section-description {
+    margin-bottom: 30px;
+    font-size: 1.05rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.add-place-button {
+    margin-top: 30px;
+}
+
+/* Table Specific Styles */
+.table-responsive {
+    overflow-x: auto; /* Enables horizontal scrolling on small screens */
+    margin-top: 40px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.places-table {
+    width: 100%;
+    border-collapse: collapse; /* Remove space between cells */
+    margin: 0; /* Remove default table margins */
+}
+
+.places-table thead {
+    background-color: #f4f6f9; /* Light header background */
+    border-bottom: 2px solid #ddd;
+}
+
+.places-table th {
+    padding: 18px 25px;
+    text-align: left;
+    font-family: 'Merriweather', serif;
+    font-size: 1.1rem;
+    color: #2C3E50;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #eee; /* Subtle border for headers */
+}
+
+.places-table tbody tr {
+    border-bottom: 1px solid #eee; /* Light border between rows */
+    transition: background-color 0.2s ease;
+}
+
+.places-table tbody tr:last-child {
+    border-bottom: none; /* No border for the last row */
+}
+
+.places-table tbody tr:hover {
+    background-color: #fcfdff; /* Subtle hover effect on rows */
+}
+
+.places-table td {
+    padding: 15px 25px;
+    vertical-align: middle;
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.places-table td a {
+    font-weight: 500;
+    color: #4A90E2;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.places-table td a:hover {
+    color: #2F6DBA;
+    text-decoration: underline;
+}
+
+/* Specific column widths for better layout */
+.places-table .description-column {
+    width: 45%; /* Give more space to descriptions */
+}
+
+.places-table .action-column {
+    width: 20%; /* Space for action buttons */
+    white-space: nowrap; /* Prevent buttons from wrapping */
+    text-align: center; /* Center actions */
+}
+
+/* Button styles within table (reusing existing .btn .btn-small) */
+.places-table .btn-small {
+    padding: 8px 15px; /* Adjust padding for smaller table buttons */
+    font-size: 0.85rem; /* Smaller font for table buttons */
+    margin: 0 3px; /* Small margin between buttons */
+    border-radius: 4px; /* Slightly less rounded */
+    display: inline-block; /* Ensure buttons align */
+    vertical-align: middle; /* Align vertically in cell */
+}
+
+/* Specific button colors for actions */
+.btn-view {
+    background-color: #4A90E2; /* Primary blue */
+    border-color: #4A90E2;
+    color: #fff;
+}
+.btn-view:hover {
+    background-color: #2F6DBA;
+    border-color: #2F6DBA;
+}
+
+.btn-edit {
+    background-color: #FFC107; /* Warning yellow */
+    border-color: #FFC107;
+    color: #333; /* Dark text on yellow */
+}
+.btn-edit:hover {
+    background-color: #E0A800;
+    border-color: #E0A800;
+}
+
+.btn-delete {
+    background-color: #DC3545; /* Danger red */
+    border-color: #DC3545;
+    color: #fff;
+}
+.btn-delete:hover {
+    background-color: #C82333;
+    border-color: #B30000;
+}
+
+
+/* No Places Found Message */
+.no-places-found {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin-top: 40px;
+}
+
+.no-places-found p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.no-places-found .btn-primary { /* Style the 'add a new place' link as a button here */
+    margin-top: 15px;
+    padding: 10px 25px;
+    font-size: 1rem;
+}
+
+
+/* Responsive adjustments for table (making it "stack" on mobile) */
+@media (max-width: 768px) {
+    .table-responsive {
+        border-radius: 0; /* Remove border-radius on small screens if it spans full width */
+        box-shadow: none; /* Remove shadow on small screens */
+    }
+
+    .places-table, .places-table thead, .places-table tbody, .places-table th, .places-table td, .places-table tr {
+        display: block; /* Make all table elements behave like block-level elements */
+    }
+
+    .places-table thead tr {
+        position: absolute;
+        top: -9999px; /* Hide table header visually but keep it for screen readers */
+        left: -9999px;
+    }
+
+    .places-table tr {
+        border: 1px solid #eee; /* Add a border to each "row card" */
+        margin-bottom: 15px; /* Space between "row cards" */
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        padding: 15px; /* Padding for the "row card" */
+    }
+
+    .places-table td {
+        border: none; /* Remove individual cell borders */
+        position: relative;
+        padding-left: 50%; /* Space for the data-label */
+        text-align: right; /* Align actual data to the right */
+        word-break: break-word; /* Ensure long words break */
+    }
+
+    .places-table td::before {
+        content: attr(data-label); /* Use data-label for "label" text */
+        position: absolute;
+        left: 10px;
+        width: calc(50% - 20px); /* Adjust width to fit */
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #333;
+        font-family: 'Merriweather', serif; /* Labels as Merriweather */
+        font-size: 0.95rem;
+    }
+
+    .places-table .action-column {
+        text-align: center; /* Center buttons on mobile */
+        margin-top: 15px;
+        padding-left: 10px; /* Remove padding override */
+        width: auto; /* Reset width */
+    }
+    .places-table .action-column .btn-small {
+        margin: 5px; /* More space between buttons */
+        min-width: 80px; /* Ensure buttons are readable */
+    }
+
+    .places-table .description-column {
+        width: auto; /* Reset width */
+        padding-left: 50%; /* Apply label padding */
+    }
+}
+
+@media (max-width: 480px) {
+    .page-hero-section {
+        height: 220px;
+    }
+    .page-hero-title {
+        font-size: 1.8rem;
+    }
+    .page-hero-subtitle {
+        font-size: 1rem;
+    }
+    .places-table-section .section-title {
+        font-size: 1.9rem;
+    }
+    .places-table td {
+        font-size: 0.9rem;
+    }
+    .places-table td::before {
+        font-size: 0.85rem;
+    }
+}
+</style>
+    <section class="page-hero-section">
+        <div class="page-hero-content">
+            <h1 class="page-hero-title">All Our Heritage Destinations</h1>
+            <p class="page-hero-subtitle">A detailed overview of cultural sites and historical wonders, presented for easy Browse.</p>
+        </div>
+        <div class="page-hero-image-overlay"></div>
+    </section>
+
+    <section class="places-table-section container">
+        <div class="section-header">
+            <h2 class="section-title">Explore Our Collection of Places</h2>
+            <p class="section-description">Below is a comprehensive list of all places, including key details. Click on a place name for more information.</p>
+            <div class="add-place-button">
+                <a href="{% url 'place_create' %}" class="btn btn-primary" style="height: 10px; background-color:#2F6DBA; padding: 10px; color: #ffffff; border-radius: 5px;">Add New Place</a>
+            </div>
+        </div>
+
+        {% if places %}
+            <div class="table-responsive"> {# Wrapper for horizontal scrolling on small screens #}
+                <table class="places-table">
+                    <thead>
+                        <tr>
+                            <th>Place Name</th>
+                            
+                            <th class="action-column">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for place in places %}
+                            <tr>
+                                <td data-label="Place Name" ><a href="{% url 'place_detail' place.pk %}">{{ place.name }}</a></td>
+                                
+                                <td data-label="Actions" class="action-column">
+                                    <a href="{% url 'place_detail' place.pk %}" class="btn btn-small btn-view" style="color: #f4f6f9;">View</a>
+                                    {# Assuming you have 'place_update' and 'place_delete' URLs #}
+                                    <a href="{% url 'place_update' place.pk %}" class="btn btn-small btn-edit" style="color: #000000;">Edit</a>
+                                    <a href="{% url 'place_delete' place.pk %}" class="btn btn-small btn-delete" style="color: #f4f6f9;">Delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="no-places-found">
+                <p>No places have been added yet. Be the first to <a href="{% url 'place_create' %}" class="btn btn-primary">add a new place</a>!</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

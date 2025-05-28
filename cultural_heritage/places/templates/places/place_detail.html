@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* --- Place Detail Page Specific Styles --- */
+
+/* Hero Section for Detail Page */
+.detail-hero-section {
+    height: 450px; /* Taller hero for prominent image */
+    margin-bottom: 60px;
+    /* The background image is set inline in the HTML for dynamic loading */
+    /* Add a fallback background if place.image is not available or for general consistency */
+    background-image: url("{% static 'images/default-detail-hero.jpg' %}"); /* Fallback/Default image */
+    background-color: #333; /* Dark background if no image is loaded */
+}
+
+.detail-hero-section .page-hero-content {
+    background-color: rgba(0, 0, 0, 0.4); /* Slightly lighter overlay for title text */
+    padding: 20px 40px;
+    border-radius: 8px;
+}
+
+.detail-hero-section .page-hero-title {
+    font-size: 3.5rem; /* Larger title */
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+}
+
+.detail-hero-section .page-hero-subtitle {
+    font-size: 1.5rem; /* Larger subtitle/location */
+    font-style: italic;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+}
+
+/* Place Detail Content Section */
+.place-detail-section {
+    padding-bottom: 80px;
+    background-color: #fff;
+}
+
+.detail-content {
+    display: flex; /* Use flexbox for layout */
+    gap: 40px; /* Space between description and image */
+    align-items: flex-start; /* Align items to the top */
+    margin-bottom: 60px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.description-block {
+    flex: 2; /* Takes up more space */
+    min-width: 300px; /* Minimum width before wrapping */
+}
+
+.image-block {
+    flex: 1; /* Takes up less space */
+    min-width: 280px; /* Minimum width before wrapping */
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.place-detail-image {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    display: block;
+    border-radius: 10px; /* Rounded corners on image */
+    transition: transform 0.3s ease;
+}
+
+.image-block:hover .place-detail-image {
+    transform: scale(1.02); /* Slight zoom on hover */
+}
+
+.image-caption {
+    font-size: 0.9rem;
+    color: #fffdfd;
+    padding: 10px 15px;
+    text-align: center;
+    background-color: #f0f0f0; /* Light background for caption */
+    border-top: 1px solid #eee;
+}
+
+.place-full-description {
+    font-size: 1.1rem;
+    color: #444;
+    line-height: 1.8;
+    margin-top: 20px; /* Space after heading */
+}
+
+.no-description {
+    font-style: italic;
+    color: #777;
+    margin-top: 20px;
+}
+
+/* Action Buttons for Detail Page */
+.detail-actions {
+    margin-top: 40px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap */
+}
+
+.detail-actions .btn {
+    padding: 12px 25px;
+    font-size: 1.05rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-edit-place {
+    background-color: #4A90E2; /* Primary blue for edit */
+    border-color: #4A90E2;
+    color: #fff;
+}
+.btn-edit-place:hover {
+    background-color: #2F6DBA;
+    border-color: #2F6DBA;
+    transform: translateY(-2px);
+}
+
+.btn-delete-place {
+    background-color: #DC3545; /* Danger red for delete */
+    border-color: #DC3545;
+    color: #fff;
+}
+.btn-delete-place:hover {
+    background-color: #C82333;
+    border-color: #C82333;
+    transform: translateY(-2px);
+}
+
+.btn-back-to-list {
+    background-color: #6C757D; /* Grey for back button */
+    border-color: #6C757D;
+    color: #fff;
+}
+.btn-back-to-list:hover {
+    background-color: #5A6268;
+    border-color: #5A6268;
+    transform: translateY(-2px);
+}
+
+/* Custom section title for detail page - aligned left */
+.section-title-left {
+    font-family: 'Merriweather', serif;
+    font-size: 2.2rem; /* Slightly smaller than main section title */
+    text-align: left; /* Align to the left */
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-weight: 700;
+    position: relative; /* For the underline effect */
+    display: inline-block; /* To make underline fit content */
+}
+
+.section-title-left::after {
+    content: '';
+    display: block;
+    width: 60px; /* Short underline */
+    height: 3px;
+    background-color: #4A90E2; /* Primary blue color */
+    margin-top: 8px; /* Space between title and underline */
+}
+
+
+/* Responsive adjustments for Place Detail Page */
+@media (max-width: 1024px) {
+    .detail-hero-section {
+        height: 400px;
+    }
+    .detail-hero-section .page-hero-title {
+        font-size: 3rem;
+    }
+    .detail-hero-section .page-hero-subtitle {
+        font-size: 1.3rem;
+    }
+    .section-title-left {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .detail-hero-section {
+        height: 300px;
+        margin-bottom: 40px;
+    }
+    .detail-hero-section .page-hero-title {
+        font-size: 2.5rem;
+    }
+    .detail-hero-section .page-hero-subtitle {
+        font-size: 1.1rem;
+    }
+    .detail-content {
+        flex-direction: column; /* Stack image and description vertically */
+        align-items: center; /* Center items when stacked */
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    .description-block, .image-block {
+        width: 100%; /* Full width when stacked */
+        min-width: unset; /* Remove min-width override */
+    }
+    .description-block {
+        order: 2; /* Put description below image on mobile */
+    }
+    .image-block {
+        order: 1; /* Put image above description on mobile */
+    }
+    .section-title-left {
+        font-size: 1.8rem;
+        text-align: center; /* Center title when stacked */
+        width: 100%; /* Ensure underline spans full width if text is short */
+    }
+    .section-title-left::after {
+        margin-left: auto; /* Center underline */
+        margin-right: auto; /* Center underline */
+    }
+    .place-full-description {
+        font-size: 1rem;
+    }
+    .detail-actions {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 15px;
+    }
+    .detail-actions .btn {
+        width: 90%; /* Make buttons wider on mobile */
+        max-width: 300px; /* Limit max width for very large screens */
+        margin: 0 auto; /* Center buttons */
+    }
+}
+
+@media (max-width: 480px) {
+    .detail-hero-section {
+        height: 250px;
+    }
+    .detail-hero-section .page-hero-title {
+        font-size: 2rem;
+    }
+    .detail-hero-section .page-hero-subtitle {
+        font-size: 0.95rem;
+    }
+    .section-title-left {
+        font-size: 1.6rem;
+    }
+    .place-full-description {
+        font-size: 0.95rem;
+    }
+    .detail-actions .btn {
+        font-size: 0.95rem;
+        padding: 10px 20px;
+    }
+}
+</style>
+    <section class="page-hero-section detail-hero-section" {% if place.image %}style="background-image: url('{{ place.image.url }}');"{% endif %}>
+        <div class="page-hero-content">
+            <h1 class="page-hero-title">{{ place.name }}</h1>
+            {% if place.location %}
+                <p class="page-hero-subtitle">{{ place.location }}</p>
+            {% endif %}
+        </div>
+        <div class="page-hero-image-overlay"></div>
+    </section>
+
+    <section class="place-detail-section container">
+        <div class="detail-content">
+            <div class="description-block">
+                <h2 class="section-title-left">About {{ place.name }}</h2>
+                {% if place.description %}
+                    <div class="place-full-description">
+                        {{ place.description|safe }} {# Use 'safe' if your description might contain HTML #}
+                    </div>
+                {% else %}
+                    <p class="no-description">No detailed description is available for this place yet.</p>
+                {% endif %}
+            </div>
+
+            {% if place.image %}
+                <div class="image-block">
+                    <img src="{{ place.image.url }}" alt="{{ place.name }}" class="place-detail-image">
+                    {% if place.image_caption %} {# Assuming you might have an image_caption field #}
+                        <p class="image-caption">{{ place.image_caption }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="detail-actions">
+            <a href="{% url 'place_update' place.pk %}" class="btn btn-primary btn-edit-place">Edit Place</a>
+            <a href="{% url 'place_delete' place.pk %}" class="btn btn-danger btn-delete-place">Delete Place</a>
+            <a href="{% url 'place_list' %}" class="btn btn-secondary btn-back-to-list">Back to All Places</a>
+        </div>
+    </section>
+{% endblock %}

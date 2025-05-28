@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>/* --- Delete Confirmation Page Specific Styles (Reused) --- */
+
+.delete-hero-section {
+    background-image: url("{% static 'images/delete-hero-background.jpg' %}"); /* Reused from Place delete */
+    height: 280px;
+    margin-bottom: 50px;
+}
+
+/* ... (rest of the .delete-hero-section styles are the same) ... */
+
+.confirmation-section {
+    padding-bottom: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 40vh;
+    background-color: #f8f8f8;
+}
+
+.confirmation-box {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    padding: 40px;
+    max-width: 600px;
+    text-align: center;
+    border: 1px solid #eee;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* @keyframes fadeIn (should be present) */
+
+.confirmation-icon {
+    margin-bottom: 25px;
+}
+
+.confirmation-icon img {
+    width: 80px;
+    height: 80px;
+}
+
+.confirmation-title {
+    font-family: 'Merriweather', serif;
+    font-size: 2.2rem;
+    color: #DC3545;
+    margin-bottom: 15px;
+}
+
+.confirmation-message {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.confirmation-message strong {
+    color: #333;
+}
+
+.confirmation-form {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.confirmation-form .btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-confirm-delete {
+    background-color: #DC3545;
+    border-color: #DC3545;
+    color: #fff;
+}
+.btn-confirm-delete:hover {
+    background-color: #C82333;
+    border-color: #C82333;
+    transform: translateY(-2px);
+}
+
+.btn-cancel-delete {
+    background-color: #6C757D;
+    border-color: #6C757D;
+    color: #fff;
+}
+.btn-cancel-delete:hover {
+    background-color: #5A6268;
+    border-color: #5A6268;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments (reused) */
+/* ... (all existing media queries for delete pages apply here) ... */</style>
+    
+
+    <section class="confirmation-section container">
+        <div class="confirmation-box">
+            
+            <h2 class="confirmation-title">Are you absolutely sure?</h2>
+            <p class="confirmation-message">
+                You are about to permanently delete the package: **"{{ package.title }}"**.
+                This action cannot be undone. All associated data will be lost.
+            </p>
+
+            <form method="post" class="confirmation-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-confirm-delete">Yes, Delete Permanently</button>
+                <a href="{% url 'package_detail' package.pk %}" class="btn btn-secondary btn-cancel-delete">Cancel</a>
+            </form>
+        </div>
+    </section>
+{% endblock %}
